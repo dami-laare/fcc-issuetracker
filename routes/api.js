@@ -44,7 +44,7 @@ module.exports = function (app, database) {
         )
         .toArray((err, result) => {
           if (!err) {
-            res.status(200).send(result);
+            res.send(result);
           }
         });
     })
@@ -56,7 +56,7 @@ module.exports = function (app, database) {
         req.body;
 
       if (!issue_title || !issue_text || !created_by) {
-        return res.status(200).json({
+        return res.json({
           error: "required field(s) missing",
         });
       }
@@ -87,7 +87,7 @@ module.exports = function (app, database) {
               projection: { project: 0 },
             },
             (err, result) => {
-              res.status(200).json({
+              res.json({
                 ...result,
               });
             }
@@ -104,7 +104,7 @@ module.exports = function (app, database) {
       const { _id } = req.body;
 
       if (!_id) {
-        return res.status(200).json({ error: "missing _id" });
+        return res.json({ error: "missing _id" });
       }
 
       const bodyCopy = req.body;
@@ -120,15 +120,13 @@ module.exports = function (app, database) {
         Object.keys(bodyCopy).length === 0 &&
         !Object.keys(bodyCopy).includes("open")
       ) {
-        return res
-          .status(200)
-          .json({ error: "no update field(s) sent", _id: _id });
+        return res.json({ error: "no update field(s) sent", _id: _id });
       }
 
       const fields = Object.keys(req.body);
 
       if (fields.length <= 1 && !fields.includes("open")) {
-        return res.status(200).json({ error: "could not update", _id });
+        return res.json({ error: "could not update", _id });
       }
       const update = {};
 
@@ -160,18 +158,18 @@ module.exports = function (app, database) {
             { returnDocument: "after" },
             (err, doc) => {
               if (err) {
-                return res.status(200).json({ error: "could not update", _id });
+                return res.json({ error: "could not update", _id });
               }
 
               if (!doc) {
-                return res.status(200).json({ error: "could not update", _id });
+                return res.json({ error: "could not update", _id });
               }
-              res.status(200).json({ result: "successfully updated", _id });
+              res.json({ result: "successfully updated", _id });
             }
           );
       } catch (err) {
         console.log(err);
-        res.status(200).json({ error: "could not update", _id });
+        res.json({ error: "could not update", _id });
       }
     })
 
@@ -181,7 +179,7 @@ module.exports = function (app, database) {
       const { _id } = req.body;
 
       if (!_id) {
-        return res.status(200).json({ error: "missing _id" });
+        return res.json({ error: "missing _id" });
       }
 
       try {
@@ -189,7 +187,7 @@ module.exports = function (app, database) {
           .collection("issues")
           .deleteOne({ _id: new ObjectId(_id), project }, async (err, doc) => {
             if (err) {
-              return res.status(200).json({ error: "could not delete", _id });
+              return res.json({ error: "could not delete", _id });
             }
             await database.collection("issues").findOne(
               {
@@ -197,21 +195,17 @@ module.exports = function (app, database) {
               },
               (err, doc) => {
                 if (!doc) {
-                  return res
-                    .status(200)
-                    .json({ error: "could not delete", _id });
+                  return res.json({ error: "could not delete", _id });
                 }
                 if (err) {
-                  return res
-                    .status(200)
-                    .json({ error: "could not delete", _id });
+                  return res.json({ error: "could not delete", _id });
                 }
-                res.status(200).json({ result: "successfully deleted", _id });
+                res.json({ result: "successfully deleted", _id });
               }
             );
           });
       } catch (err) {
-        return res.status(200).json({ error: "could not delete", _id });
+        return res.json({ error: "could not delete", _id });
       }
     });
 };
