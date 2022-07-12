@@ -183,7 +183,7 @@ module.exports = function (app, database) {
         .collection("issues")
         .deleteOne({ _id: new ObjectId(_id), project }, (err) => {
           if (err) {
-            return res.status(200).json({ error: "could not update", _id });
+            return res.status(200).json({ error: "could not delete", _id });
           }
           res.status(200).json({ result: "successfully deleted", _id });
         });
