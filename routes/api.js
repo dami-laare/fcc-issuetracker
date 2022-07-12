@@ -104,12 +104,30 @@ module.exports = function (app, database) {
       const { _id } = req.body;
 
       if (!_id) {
-        return res.status(200).json({ error: 'missing _id' });
+        return res.status(200).json({ error: "missing _id" });
+      }
+
+      const bodyCopy = req.body;
+
+      delete bodyCopy._id;
+
+      Object.keys(bodyCopy).forEach((el) => {
+        if (!bodyCopy[el] && el !== "open") {
+          delete bodyCopy[el];
+        }
+      });
+      if (
+        Object.keys(bodyCopy).length === 0 &&
+        !Object.keys(bodyCopy).includes("open")
+      ) {
+        return res
+          .status(200)
+          .json({ error: "no update field(s) sent", _id: _id });
       }
 
       const fields = Object.keys(req.body);
 
-      if (fields.length <= 1) {
+      if (fields.length <= 1 && !fields.includes("open")) {
         return res.status(200).json({ error: "could not update", _id });
       }
       const update = {};
@@ -117,7 +135,7 @@ module.exports = function (app, database) {
       fields.forEach((el) => {
         if (el !== "_id" && req.body[el]) {
           if (el === "open") {
-            switch (req.body[el]) {
+            switch (req.body.open) {
               case "true":
                 update[el] = true;
                 return;
@@ -148,7 +166,6 @@ module.exports = function (app, database) {
           );
       } catch (err) {
         console.log(err);
-        console.log("Update fields", update);
         res.status(200).json({ error: "could not update", _id });
       }
     })
