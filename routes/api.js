@@ -99,7 +99,17 @@ module.exports = function (app, database) {
 
       fields.forEach((el) => {
         if (el !== "_id" && req.body[el]) {
-          update[el] = req.body[el];
+          if (el === "open") {
+            switch (req.body[el]) {
+              case "true":
+                update[el] = true;
+              case "false":
+                update[el] = false;
+              default:
+                return;
+            }
+            update[el] = req.body[el];
+          }
         }
       });
 
