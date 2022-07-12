@@ -1,5 +1,5 @@
 "use strict";
-const { ObjectID } = require("mongodb");
+const { ObjectId } = require("mongodb");
 
 module.exports = function (app, database) {
   app
@@ -108,6 +108,7 @@ module.exports = function (app, database) {
               default:
                 return;
             }
+          } else {
             update[el] = req.body[el];
           }
         }
@@ -117,9 +118,8 @@ module.exports = function (app, database) {
         await database
           .collection("issues")
           .findOneAndUpdate(
-            { _id: new ObjectID(_id), project },
+            { _id: new ObjectId(_id), project },
             { $set: { ...update, updated_on: new Date(Date.now()) } },
-            { upsert: true },
             (err) => {
               if (err) {
                 return res.status(200).json({ error: "could not update", _id });
@@ -145,7 +145,7 @@ module.exports = function (app, database) {
 
       await database
         .collection("issues")
-        .deleteOne({ _id: new ObjectID(_id), project }, (err) => {
+        .deleteOne({ _id: new ObjectId(_id), project }, (err) => {
           if (err) {
             return res.status(200).json({ error: "could not update", _id });
           }
