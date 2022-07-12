@@ -86,7 +86,7 @@
             type: "PUT",
             url: url,
             data: {_id: $(this).attr('id'), open: false},
-            success: function(data) { alert(data); window.location.reload(true); }
+            success: function(data) { alert(JSON.stringify(data)); window.location.reload(true); }
           });
           e.preventDefault();
         });
@@ -96,7 +96,7 @@
             type: "DELETE",
             url: url,
             data: {_id: $(this).attr('id')},
-            success: function(data) { alert(data); window.location.reload(true); }
+            success: function(data) { alert(JSON.stringify(data)); window.location.reload(true); }
           });
           e.preventDefault();
         });
