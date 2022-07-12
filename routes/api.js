@@ -179,13 +179,17 @@ module.exports = function (app, database) {
         return res.status(200).json({ error: "missing _id" });
       }
 
-      await database
-        .collection("issues")
-        .deleteOne({ _id: new ObjectId(_id), project }, (err) => {
-          if (err) {
-            return res.status(200).json({ error: "could not delete", _id });
-          }
-          res.status(200).json({ result: "successfully deleted", _id });
-        });
+      try {
+        await database
+          .collection("issues")
+          .deleteOne({ _id: new ObjectId(_id), project }, (err) => {
+            if (err) {
+              return res.status(200).json({ error: "could not delete", _id });
+            }
+            res.status(200).json({ result: "successfully deleted", _id });
+          });
+      } catch (err) {
+        return res.status(200).json({ error: "could not delete", _id });
+      }
     });
 };
