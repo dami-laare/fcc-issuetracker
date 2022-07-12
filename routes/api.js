@@ -11,9 +11,26 @@ module.exports = function (app, database) {
       const filter = {};
 
       Object.keys(req.query).forEach((query) => {
-        filter[query] = req.query[query];
+        if (query === "open") {
+          switch (req.query.open) {
+            case "true":
+              filter.open = true;
+              return;
+            case "false":
+              filter.open = false;
+              return;
+            default:
+              return;
+          }
+        } else if (query === "created_on") {
+          filter[query] = new Date(Date.now());
+        } else {
+          filter[query] = {
+            $regex: `${req.query[query]}`,
+            $options: "i",
+          };
+        }
       });
-
       await database
         .collection("issues")
         .find(
@@ -103,8 +120,10 @@ module.exports = function (app, database) {
             switch (req.body[el]) {
               case "true":
                 update[el] = true;
+                return;
               case "false":
                 update[el] = false;
+                return;
               default:
                 return;
             }
