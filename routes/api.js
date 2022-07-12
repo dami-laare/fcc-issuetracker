@@ -176,7 +176,7 @@ module.exports = function (app, database) {
       const { _id } = req.body;
 
       if (!_id) {
-        return res.status(200).json({ error: "could not update", _id });
+        return res.status(200).json({ error: "missing _id" });
       }
 
       await database
