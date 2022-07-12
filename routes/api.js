@@ -157,8 +157,13 @@ module.exports = function (app, database) {
           .findOneAndUpdate(
             { _id: new ObjectId(_id), project },
             { $set: { ...update, updated_on: new Date(Date.now()) } },
-            (err) => {
+            { returnDocument: "after" },
+            (err, doc) => {
               if (err) {
+                return res.status(200).json({ error: "could not update", _id });
+              }
+
+              if (!doc) {
                 return res.status(200).json({ error: "could not update", _id });
               }
               res.status(200).json({ result: "successfully updated", _id });
@@ -182,11 +187,28 @@ module.exports = function (app, database) {
       try {
         await database
           .collection("issues")
-          .deleteOne({ _id: new ObjectId(_id), project }, (err) => {
+          .deleteOne({ _id: new ObjectId(_id), project }, async (err, doc) => {
             if (err) {
               return res.status(200).json({ error: "could not delete", _id });
             }
-            res.status(200).json({ result: "successfully deleted", _id });
+            await database.collection("issues").findOne(
+              {
+                _id: new ObjectId(_id),
+              },
+              (err, doc) => {
+                if (!doc) {
+                  return res
+                    .status(200)
+                    .json({ error: "could not delete", _id });
+                }
+                if (err) {
+                  return res
+                    .status(200)
+                    .json({ error: "could not delete", _id });
+                }
+                res.status(200).json({ result: "successfully deleted", _id });
+              }
+            );
           });
       } catch (err) {
         return res.status(200).json({ error: "could not delete", _id });
