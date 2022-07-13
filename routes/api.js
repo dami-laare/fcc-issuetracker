@@ -159,6 +159,8 @@ module.exports = function (app, database) {
             if (!doc) {
               return res.json({ error: "could not update", _id });
             }
+
+            doc = { ...doc, ...update };
             await database
               .collection("issues")
               .updateOne(

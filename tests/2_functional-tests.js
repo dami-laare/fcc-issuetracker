@@ -130,7 +130,7 @@ suite("Functional Tests", function () {
         .put("/api/issues/apitest")
         .set("content-type", "application/x-www-form-urlencoded")
         .send({
-          _id: "62cde0870119240d41e506db",
+          _id: "62ce81a22c140d39715b032b",
           created_by: "Rotimi",
         })
         .end((err, res) => {
@@ -147,7 +147,7 @@ suite("Functional Tests", function () {
         .put("/api/issues/apitest")
         .set("content-type", "application/x-www-form-urlencoded")
         .send({
-          _id: "62cde0870119240d41e506db",
+          _id: "62ce81a22c140d39715b032b",
           created_by: "Rotimi",
           assigned_to: "Damilare",
           status_text: "Updating stuff",
