@@ -91,7 +91,6 @@ suite("Functional Tests", function () {
           if (err) {
             return done(err);
           }
-          assert.strictEqual(res.status, 200);
           assert.isArray(res.body, "Response is an array");
           done();
         });
@@ -106,7 +105,6 @@ suite("Functional Tests", function () {
           if (err) {
             return done(err);
           }
-          assert.strictEqual(res.status, 200);
           assert.isArray(res.body);
           done();
         });
@@ -121,7 +119,6 @@ suite("Functional Tests", function () {
           if (err) {
             return done(err);
           }
-          assert.strictEqual(res.status, 200);
           assert.isArray(res.body);
           done();
         });
@@ -142,7 +139,6 @@ suite("Functional Tests", function () {
           if (err) {
             done(err);
           }
-          assert.strictEqual(res.status, 201);
           assert.strictEqual(res.body.result, "successfully updated");
           done();
         });
@@ -161,7 +157,6 @@ suite("Functional Tests", function () {
           if (err) {
             done(err);
           }
-          assert.strictEqual(res.status, 201);
           assert.strictEqual(res.body.result, "successfully updated");
           done();
         });

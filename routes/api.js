@@ -44,7 +44,7 @@ module.exports = function (app, database) {
         )
         .toArray((err, result) => {
           if (!err) {
-            res.status(200).send(result);
+            res.send(result);
           }
         });
     })
@@ -87,7 +87,7 @@ module.exports = function (app, database) {
               projection: { project: 0 },
             },
             (err, result) => {
-              res.status(201).json({
+              res.json({
                 ...result,
               });
             }
@@ -126,7 +126,7 @@ module.exports = function (app, database) {
       const fields = Object.keys(req.body);
 
       if (fields.length <= 1 && !fields.includes("open")) {
-        return res.send({ error: "could not update", _id });
+        return res.json({ error: "could not update", _id });
       }
       const update = {};
 
@@ -158,13 +158,13 @@ module.exports = function (app, database) {
             { returnDocument: "after" },
             (err, doc) => {
               if (err) {
-                return res.send({ error: "could not update", _id });
+                return res.json({ error: "could not update", _id });
               }
 
               if (!doc) {
-                return res.send({ error: "could not update", _id });
+                return res.json({ error: "could not update", _id });
               }
-              res.status(201).send({ result: "successfully updated", _id });
+              res.json({ result: "successfully updated", _id });
             }
           );
       } catch (err) {
