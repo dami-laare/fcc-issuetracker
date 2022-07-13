@@ -130,7 +130,7 @@ suite("Functional Tests", function () {
         .put("/api/issues/apitest")
         .set("content-type", "application/x-www-form-urlencoded")
         .send({
-          _id: "62cdd8e9035100b488745337",
+          _id: "62cde0870119240d41e506db",
           created_by: "Rotimi",
         })
         .end((err, res) => {

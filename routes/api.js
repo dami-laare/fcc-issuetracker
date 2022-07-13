@@ -152,21 +152,26 @@ module.exports = function (app, database) {
       try {
         await database
           .collection("issues")
-          .findOneAndUpdate(
-            { _id: new ObjectId(_id) },
-            { $set: { ...update, updated_on: new Date(Date.now()) } },
-            { returnDocument: "after" },
-            (err, doc) => {
-              if (err) {
-                return res.json({ error: "could not update", _id });
-              }
-
-              if (!doc) {
-                return res.json({ error: "could not update", _id });
-              }
-              res.json({ result: "successfully updated", _id });
+          .findOne({ _id: new ObjectId(_id) }, async (err, doc) => {
+            if (err) {
+              return res.json({ error: "could not update", _id });
             }
-          );
+            if (!doc) {
+              return res.json({ error: "could not update", _id });
+            }
+            await database
+              .collection("issues")
+              .updateOne(
+                { _id: new ObjectId(_id) },
+                { $set: { ...update, updated_on: new Date(Date.now()) } },
+                (err) => {
+                  if (err) {
+                    return res.json({ error: "could not update", _id });
+                  }
+                  res.json({ result: "successfully updated", _id });
+                }
+              );
+          });
       } catch (err) {
         res.send({ error: "could not update", _id });
       }
