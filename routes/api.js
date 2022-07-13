@@ -170,7 +170,7 @@ module.exports = function (app, database) {
                   if (err) {
                     return res.json({ error: "could not update", _id });
                   }
-                  res.json({ result: "successfully updated", _id });
+                  res.send({ result: "successfully updated", _id });
                 }
               );
           });
