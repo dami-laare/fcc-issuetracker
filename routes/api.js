@@ -188,10 +188,10 @@ module.exports = function (app, database) {
           },
           async (err, doc) => {
             if (!doc) {
-              return res.json({ error: "could not delete", _id });
+              return res.send({ error: "could not delete", _id });
             }
             if (err) {
-              return res.json({ error: "could not delete", _id });
+              return res.send({ error: "could not delete", _id });
             }
 
             try {
@@ -199,7 +199,7 @@ module.exports = function (app, database) {
                 .collection("issues")
                 .deleteOne({ _id: new ObjectId(_id) }, async (err) => {
                   if (err) {
-                    return res.json({ error: "could not delete", _id });
+                    return res.send({ error: "could not delete", _id });
                   }
                   await database.collection("issues").findOne(
                     {
@@ -207,22 +207,22 @@ module.exports = function (app, database) {
                     },
                     (err, doc) => {
                       if (doc) {
-                        return res.json({ error: "could not delete", _id });
+                        return res.send({ error: "could not delete", _id });
                       }
                       if (err) {
-                        return res.json({ error: "could not delete", _id });
+                        return res.send({ error: "could not delete", _id });
                       }
-                      res.json({ result: "successfully deleted", _id });
+                      res.send({ result: "successfully deleted", _id });
                     }
                   );
                 });
             } catch (err) {
-              return res.json({ error: "could not delete", _id });
+              return res.send({ error: "could not delete", _id });
             }
           }
         );
       } catch (err) {
-        return res.json({ error: "could not delete", _id });
+        return res.send({ error: "could not delete", _id });
       }
     });
 };
