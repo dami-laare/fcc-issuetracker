@@ -126,7 +126,7 @@ module.exports = function (app, database) {
       const fields = Object.keys(req.body);
 
       if (fields.length <= 1 && !fields.includes("open")) {
-        return res.json({ error: "could not update", _id });
+        return res.send({ error: "could not update", _id });
       }
       const update = {};
 
@@ -158,17 +158,17 @@ module.exports = function (app, database) {
             { returnDocument: "after" },
             (err, doc) => {
               if (err) {
-                return res.json({ error: "could not update", _id });
+                return res.send({ error: "could not update", _id });
               }
 
               if (!doc) {
-                return res.json({ error: "could not update", _id });
+                return res.send({ error: "could not update", _id });
               }
-              res.status(201).json({ result: "successfully updated", _id });
+              res.status(201).send({ result: "successfully updated", _id });
             }
           );
       } catch (err) {
-        res.json({ error: "could not update", _id });
+        res.send({ error: "could not update", _id });
       }
     })
 
