@@ -151,8 +151,9 @@ suite("Functional Tests", function () {
           created_by: "Rotimi",
           assigned_to: "Damilare",
           status_text: "Updating stuff",
-          issue_title: "Tesiting udates",
+          issue_title: "Tesiting udates nowwww",
           issue_text: "Testing update",
+          open: "false",
         })
         .end((err, res) => {
           if (err) {
