@@ -44,7 +44,7 @@ module.exports = function (app, database) {
         )
         .toArray((err, result) => {
           if (!err) {
-            res.send(result);
+            res.status(200).send(result);
           }
         });
     })
@@ -87,7 +87,7 @@ module.exports = function (app, database) {
               projection: { project: 0 },
             },
             (err, result) => {
-              res.json({
+              res.status(201).json({
                 ...result,
               });
             }
@@ -107,7 +107,7 @@ module.exports = function (app, database) {
         return res.json({ error: "missing _id" });
       }
 
-      const bodyCopy = req.body;
+      const bodyCopy = { ...req.body };
 
       delete bodyCopy._id;
 
@@ -153,7 +153,7 @@ module.exports = function (app, database) {
         await database
           .collection("issues")
           .findOneAndUpdate(
-            { _id: new ObjectId(_id), project },
+            { _id: new ObjectId(_id) },
             { $set: { ...update, updated_on: new Date(Date.now()) } },
             { returnDocument: "after" },
             (err, doc) => {
@@ -164,11 +164,10 @@ module.exports = function (app, database) {
               if (!doc) {
                 return res.json({ error: "could not update", _id });
               }
-              res.json({ result: "successfully updated", _id });
+              res.status(201).json({ result: "successfully updated", _id });
             }
           );
       } catch (err) {
-        console.log(err);
         res.json({ error: "could not update", _id });
       }
     })
@@ -183,27 +182,45 @@ module.exports = function (app, database) {
       }
 
       try {
-        await database
-          .collection("issues")
-          .deleteOne({ _id: new ObjectId(_id), project }, async (err, doc) => {
+        await database.collection("issues").findOne(
+          {
+            _id: new ObjectId(_id),
+          },
+          async (err, doc) => {
+            if (!doc) {
+              return res.json({ error: "could not delete", _id });
+            }
             if (err) {
               return res.json({ error: "could not delete", _id });
             }
-            await database.collection("issues").findOne(
-              {
-                _id: new ObjectId(_id),
-              },
-              (err, doc) => {
-                if (!doc) {
-                  return res.json({ error: "could not delete", _id });
-                }
-                if (err) {
-                  return res.json({ error: "could not delete", _id });
-                }
-                res.json({ result: "successfully deleted", _id });
-              }
-            );
-          });
+
+            try {
+              await database
+                .collection("issues")
+                .deleteOne({ _id: new ObjectId(_id) }, async (err) => {
+                  if (err) {
+                    return res.json({ error: "could not delete", _id });
+                  }
+                  await database.collection("issues").findOne(
+                    {
+                      _id: new ObjectId(_id),
+                    },
+                    (err, doc) => {
+                      if (doc) {
+                        return res.json({ error: "could not delete", _id });
+                      }
+                      if (err) {
+                        return res.json({ error: "could not delete", _id });
+                      }
+                      res.json({ result: "successfully deleted", _id });
+                    }
+                  );
+                });
+            } catch (err) {
+              return res.json({ error: "could not delete", _id });
+            }
+          }
+        );
       } catch (err) {
         return res.json({ error: "could not delete", _id });
       }
