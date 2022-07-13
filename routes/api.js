@@ -112,22 +112,22 @@ module.exports = function (app, database) {
       delete bodyCopy._id;
 
       Object.keys(bodyCopy).forEach((el) => {
-        if (!bodyCopy[el] && el !== "open") {
+        if (!bodyCopy[el]) {
           delete bodyCopy[el];
         }
       });
       if (
-        Object.keys(bodyCopy).length === 0 &&
-        !Object.keys(bodyCopy).includes("open")
+        Object.keys(bodyCopy).length === 0
+        // !Object.keys(bodyCopy).includes("open")
       ) {
         return res.json({ error: "no update field(s) sent", _id: _id });
       }
 
       const fields = Object.keys(req.body);
 
-      if (fields.length <= 1 && !fields.includes("open")) {
-        return res.json({ error: "could not update", _id });
-      }
+      // if (fields.length <= 1) {
+      //   return res.json({ error: "could not update", _id });
+      // }
       const update = {};
 
       fields.forEach((el) => {
