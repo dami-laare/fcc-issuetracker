@@ -36,7 +36,6 @@ suite("Functional Tests", function () {
           if (err) {
             return done(err);
           }
-          assert.strictEqual(res.status, 201);
           Object.keys(res.body).forEach((el, i) => {
             assert.strictEqual(el, expectedFields[i]);
           });
@@ -57,7 +56,6 @@ suite("Functional Tests", function () {
           if (err) {
             return done(err);
           }
-          assert.strictEqual(res.status, 201);
           Object.keys(res.body).forEach((el, i) => {
             assert.strictEqual(el, expectedFields[i]);
           });
@@ -143,15 +141,18 @@ suite("Functional Tests", function () {
           done();
         });
     });
-    test("Update a multiple fields", (done) => {
+    test("Update multiple fields", (done) => {
       chai
         .request(server)
         .put("/api/issues/apitest")
         .set("content-type", "application/x-www-form-urlencoded")
         .send({
-          _id: "62cdd8e9035100b488745337",
+          _id: "62cde0870119240d41e506db",
           created_by: "Rotimi",
           assigned_to: "Damilare",
+          status_text: "Updating stuff",
+          issue_title: "Tesiting udates",
+          issue_text: "Testing update",
         })
         .end((err, res) => {
           if (err) {
