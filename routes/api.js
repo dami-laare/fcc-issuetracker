@@ -160,17 +160,17 @@ module.exports = function (app, database) {
               return res.json({ error: "could not update", _id });
             }
 
-            doc = { ...doc, ...update };
+            doc = { ...doc, ...update, updated_on: new Date() };
             await database
               .collection("issues")
               .updateOne(
                 { _id: new ObjectId(_id) },
-                { $set: { ...update, updated_on: new Date(Date.now()) } },
+                { $set: { ...doc } },
                 (err) => {
                   if (err) {
                     return res.json({ error: "could not update", _id });
                   }
-                  res.send({ result: "successfully updated", _id });
+                  res.json({ result: "successfully updated", _id });
                 }
               );
           });
