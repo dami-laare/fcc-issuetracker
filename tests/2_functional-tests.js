@@ -2,6 +2,7 @@ const chaiHttp = require("chai-http");
 const chai = require("chai");
 const assert = chai.assert;
 const server = require("../server");
+require("dotenv").config();
 
 chai.use(chaiHttp);
 
@@ -223,7 +224,7 @@ suite("Functional Tests", function () {
         .delete("/api/issues/apitest")
         .set("content-type", "application/x-www-form-urlencoded")
         .send({
-          _id: "62cde0870119240d41e506dc",
+          _id: process.env.ID,
         })
         .end((err, res) => {
           if (err) {
